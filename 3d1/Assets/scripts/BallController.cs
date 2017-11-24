@@ -5,43 +5,48 @@ public class BallController : MonoBehaviour {
 
 	public float speed;
 	private Rigidbody rb;
-	private int isJumping;
-	private int numMaxSaltos;
+
+	float forwardInput;
+	float turnInput;
+	Quaternion targetRotation;
+
 	// Use this for initialization
 	void Start () {
 		this.rb = GetComponent<Rigidbody>();
-		isJumping = 0;
-		numMaxSaltos = 2;
+		targetRotation = transform.rotation;
 	}
 	
+	void Update(){
+		getInput ();
+		turn();
+	}
+
 
 	void FixedUpdate () {
-		float horizontalAxis = Input.GetAxis("Horizontal");
-		float verticalAxis = Input.GetAxis("Vertical");
-		Vector3 movement = new Vector3(horizontalAxis, 0.0f,verticalAxis);
-		rb.AddForce(movement*speed);
-
-		if(Input.GetKeyDown("space") && numMaxSaltos > 0){
-			Vector3 jumpForce = new Vector3(0.0f, 3.0f, 0.0f);
-			rb.AddForce(jumpForce, ForceMode.Impulse);
-			numMaxSaltos--;
+		if(Mathf.Abs (forwardInput) > 0.01f){
+			rb.velocity = transform.forward * speed * forwardInput;	
 		}
-		rb.FreezeNotation;
 
-		if (Input.GetKeyDown ("r") || Input.GetKey ("r")) {
-			
+		
+	}
 
-		} else if (Input.GetKeyDown ("t")||  Input.GetKey ("t")) {
-			
-
-		} 
-
-
+	void getInput(){
+		forwardInput = Input.GetAxis ("Vertical");
+		turnInput = Input.GetAxis ("Horizontal");
 
 	}
 
 	void OnCollisionEnter(Collision c){
-		this.numMaxSaltos = 2;
 		
+		
+	}
+
+	void turn(){
+		targetRotation *= Quaternion.AngleAxis (100 * turnInput * Time.deltaTime, Vector3.up);
+		transform.rotation = targetRotation;
+	}
+
+	public Quaternion getRotation(){
+		return this.targetRotation;
 	}
 }

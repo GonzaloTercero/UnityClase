@@ -6,18 +6,22 @@ public class cameraController : MonoBehaviour {
 	public GameObject obj;
 	private Vector3 diff;
 	private int maxDistance = 10;
+
+	BallController bc;
+
 	// Use this for initialization
 	void Start () {
 		//diff tiene que tener la diferencia de posiciones
 		//entre mi GameObject camara y el GameObject que persigo
 		transform.LookAt (obj.transform);
+		this.bc = obj.GetComponent<BallController> ();
 		this.diff = transform.position - obj.transform.position;
 	}
 	
 
 
 	void LateUpdate () {
-		if (Input.GetKeyDown ("r") || Input.GetKey ("r")) {
+		/*if (Input.GetKeyDown ("r") || Input.GetKey ("r")) {
 			transform.LookAt (obj.transform.position);
 			transform.RotateAround (obj.transform.position, Vector3.up, Time.deltaTime * 20);
 			this.UpdateDiff ();
@@ -36,14 +40,13 @@ public class cameraController : MonoBehaviour {
 			transform.RotateAround (obj.transform.position, Vector3.left, Time.deltaTime * 20);
 			this.UpdateDiff ();
 		}
-
-		transform.position = obj.transform.position + this.diff;
+		*/
+		transform.position = bc.getRotation ()* diff + obj.transform.position;
+		transform.LookAt (obj.transform.position);
 	}
 		
 	void UpdateDiff(){
 		this.diff = transform.position - obj.transform.position;
-
-
 	}
 
 }
