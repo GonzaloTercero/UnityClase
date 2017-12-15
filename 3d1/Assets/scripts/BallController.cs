@@ -26,7 +26,11 @@ public class BallController : MonoBehaviour {
 
 	void FixedUpdate () {
 		if(Mathf.Abs (forwardInput) > 0.01f){
-			rb.velocity = transform.forward * speed * forwardInput;	
+			Vector3 force =  transform.forward * speed * this.forwardInput;
+			rb.AddForce (force);	
+		}
+		if(Input.GetKeyDown("space")){
+			this.rb.AddForce(new Vector3(0.0f,1000.0f,0.0f));
 		}	
 	}
 
@@ -56,11 +60,7 @@ public class BallController : MonoBehaviour {
 	
 		}
 	}
-
-	void OnTriggerEnter(Collider c){
-		Debug.Log ("Colision " + c.gameObject.tag );
-	
-	}
+		
 	void turn(){
 		targetRotation *= Quaternion.AngleAxis (100 * turnInput * Time.deltaTime, Vector3.up);
 		transform.rotation = targetRotation;
